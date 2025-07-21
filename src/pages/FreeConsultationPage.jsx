@@ -1,264 +1,87 @@
-import React, { useState } from 'react'
-import './FreeConsultationPage.css'
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { useForm } from 'react-hook-form';
+import { motion } from 'framer-motion';
+import { CheckCircle, AlertTriangle } from 'lucide-react';
 
 const FreeConsultationPage = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    caseType: '',
-    incidentDate: '',
-    description: '',
-    injuries: '',
-    medicalTreatment: '',
-    insuranceClaim: ''
-  })
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const onSubmit = data => {
+        console.log(data);
+        alert('Thank you for your submission! We will contact you shortly.');
+        reset();
+    };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+    return (
+        <div>
+            <Helmet>
+                <title>Free Case Review | Florida Accident Lawyer</title>
+                <meta name="description" content="Get a free, confidential case review from our experienced personal injury attorneys. Florida law limits your time to file a claim, so act now." />
+            </Helmet>
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // In a real application, this would submit to a server
-    alert('Thank you for your detailed submission! We will contact you within 2 hours to schedule your free consultation.')
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      caseType: '',
-      incidentDate: '',
-      description: '',
-      injuries: '',
-      medicalTreatment: '',
-      insuranceClaim: ''
-    })
-  }
+            <section className="bg-navy text-white text-center py-20">
+                <motion.h1 className="text-4xl md:text-6xl font-extrabold" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+                    Get Your <span className="text-gold">FREE</span> Case Review
+                </motion.h1>
+                <motion.p className="text-xl text-gray-300 mt-4 max-w-3xl mx-auto" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+                    Don't wait. Florida law limits your time to file a claim.
+                </motion.p>
+            </section>
 
-  return (
-    <div className="free-consultation-page">
-      <section className="hero-section">
-        <div class="container">
-          <div className="hero-content">
-            <h1>Get Your <span className="highlight">FREE</span> Case Review</h1>
-            <p>Don't wait - Florida law limits your time to file a claim. Get your free, no-obligation consultation today.</p>
-            
-            <div className="hero-benefits">
-              <div className="benefit">
-                <span className="benefit-icon">✓</span>
-                <span>100% Free Consultation</span>
-              </div>
-              <div className="benefit">
-                <span className="benefit-icon">✓</span>
-                <span>No Fees Unless We Win</span>
-              </div>
-              <div className="benefit">
-                <span className="benefit-icon">✓</span>
-                <span>Available 24/7</span>
-              </div>
-            </div>
-          </div>
+            <section className="py-20 bg-gray-50">
+                <div className="container mx-auto px-4">
+                    <div className="grid lg:grid-cols-2 gap-12">
+                        {/* Form */}
+                        <motion.div
+                            className="bg-white p-8 rounded-lg shadow-2xl"
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <h2 className="text-3xl font-bold text-navy mb-6">Request Your Free Consultation</h2>
+                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                                {/* Form fields using react-hook-form */}
+                                <input {...register("name", { required: true })} placeholder="Full Name *" className="w-full p-3 border rounded" />
+                                {errors.name && <span className="text-red-500">This field is required</span>}
+
+                                <input {...register("email", { required: true, pattern: /^\S+@\S+$/i })} placeholder="Email Address *" className="w-full p-3 border rounded" />
+                                {errors.email && <span className="text-red-500">Valid email is required</span>}
+
+                                <input {...register("phone")} placeholder="Phone Number" className="w-full p-3 border rounded" />
+
+                                <textarea {...register("message", { required: true })} placeholder="Briefly describe your case *" rows="5" className="w-full p-3 border rounded"></textarea>
+                                {errors.message && <span className="text-red-500">This field is required</span>}
+
+                                <button type="submit" className="w-full bg-gold text-navy font-bold py-4 rounded-lg hover:bg-gold-dark transition-all text-lg">Submit for Free Review</button>
+                                <p className="text-xs text-gray-500 text-center mt-2">Your information is confidential and protected by attorney-client privilege.</p>
+                            </form>
+                        </motion.div>
+
+                        {/* Info Section */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <h3 className="text-3xl font-bold text-navy mb-4">What to Expect</h3>
+                            <ul className="space-y-4 text-gray-700">
+                                <li className="flex items-start"><CheckCircle className="text-green-500 h-6 w-6 mr-3 mt-1" /><span><strong>Free Evaluation:</strong> We'll review your case details to determine your claim's validity.</span></li>
+                                <li className="flex items-start"><CheckCircle className="text-green-500 h-6 w-6 mr-3 mt-1" /><span><strong>Legal Strategy:</strong> Our attorneys will explain your options and potential outcomes.</span></li>
+                                <li className="flex items-start"><CheckCircle className="text-green-500 h-6 w-6 mr-3 mt-1" /><span><strong>No Obligation:</strong> The consultation is completely free. You are not obligated to hire us.</span></li>
+                            </ul>
+
+                            <div className="mt-8 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+                                <p className="font-bold flex items-center"><AlertTriangle className="mr-2"/>Time is Critical</p>
+                                <p>Florida's statute of limitations restricts the time you have to file a personal injury claim. Contact us today to protect your rights.</p>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
         </div>
-      </section>
+    );
+};
 
-      <section className="consultation-content">
-        <div className="container">
-          <div className="consultation-grid">
-            <div className="consultation-info">
-              <h2>What to Expect</h2>
-              
-              <div className="expectation-item">
-                <div className="expectation-number">1</div>
-                <div className="expectation-content">
-                  <h3>Free Case Evaluation</h3>
-                  <p>We'll review your case details and determine if you have a valid personal injury claim.</p>
-                </div>
-              </div>
-              
-              <div className="expectation-item">
-                <div className="expectation-number">2</div>
-                <div className="expectation-content">
-                  <h3>Legal Strategy Discussion</h3>
-                  <p>Our experienced attorneys will explain your legal options and potential outcomes.</p>
-                </div>
-              </div>
-              
-              <div className="expectation-item">
-                <div className="expectation-number">3</div>
-                <div className="expectation-content">
-                  <h3>No Obligation Decision</h3>
-                  <p>You're under no obligation to hire us. The consultation is completely free.</p>
-                </div>
-              </div>
-              
-              <div className="consultation-stats">
-                <h3>Our Track Record</h3>
-                <div className="stats-grid">
-                  <div className="stat">
-                    <div className="stat-number">$50M+</div>
-                    <div className="stat-label">Recovered</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-number">1000+</div>
-                    <div className="stat-label">Cases Won</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-number">20+</div>
-                    <div className="stat-label">Years Experience</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="urgent-notice">
-                <h3>⚠️ Time is Critical</h3>
-                <p>Florida law gives you limited time to file a personal injury claim. Don't wait - contact us today to protect your rights.</p>
-              </div>
-            </div>
-            
-            <form className="consultation-form" onSubmit={handleSubmit}>
-              <h3>Request Your Free Consultation</h3>
-              <p className="form-subtitle">Fill out this form and we'll contact you within 2 hours</p>
-              
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="name">Full Name *</label>
-                  <input 
-                    type="text" 
-                    id="name" 
-                    name="name" 
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required 
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label htmlFor="phone">Phone Number *</label>
-                  <input 
-                    type="tel" 
-                    id="phone" 
-                    name="phone" 
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required 
-                  />
-                </div>
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="email">Email Address</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  name="email" 
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="caseType">Type of Case *</label>
-                <select 
-                  id="caseType" 
-                  name="caseType" 
-                  value={formData.caseType}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">Select Case Type</option>
-                  <option value="car-accident">Car Accident</option>
-                  <option value="truck-accident">Truck Accident</option>
-                  <option value="motorcycle-accident">Motorcycle Accident</option>
-                  <option value="slip-fall">Slip & Fall</option>
-                  <option value="wrongful-death">Wrongful Death</option>
-                  <option value="medical-malpractice">Medical Malpractice</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="incidentDate">Date of Incident *</label>
-                <input 
-                  type="date" 
-                  id="incidentDate" 
-                  name="incidentDate" 
-                  value={formData.incidentDate}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="description">Describe What Happened *</label>
-                <textarea 
-                  id="description" 
-                  name="description" 
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder="Please provide details about the incident..." 
-                  required
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="injuries">What Injuries Did You Sustain?</label>
-                <textarea 
-                  id="injuries" 
-                  name="injuries" 
-                  value={formData.injuries}
-                  onChange={handleInputChange}
-                  placeholder="Describe your injuries..."
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="medicalTreatment">Have You Received Medical Treatment?</label>
-                <select 
-                  id="medicalTreatment" 
-                  name="medicalTreatment" 
-                  value={formData.medicalTreatment}
-                  onChange={handleInputChange}
-                >
-                  <option value="">Select an option</option>
-                  <option value="yes-ongoing">Yes, ongoing treatment</option>
-                  <option value="yes-completed">Yes, treatment completed</option>
-                  <option value="no">No medical treatment</option>
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="insuranceClaim">Have You Filed an Insurance Claim?</label>
-                <select 
-                  id="insuranceClaim" 
-                  name="insuranceClaim" 
-                  value={formData.insuranceClaim}
-                  onChange={handleInputChange}
-                >
-                  <option value="">Select an option</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                  <option value="unsure">Not sure</option>
-                </select>
-              </div>
-              
-              <button type="submit" className="cta-button cta-button-primary submit-button">
-                Get My Free Consultation Now
-              </button>
-              
-              <p className="form-disclaimer">
-                By submitting this form, you agree to receive communications from our firm. 
-                Your information is confidential and protected by attorney-client privilege.
-              </p>
-            </form>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
-}
-
-export default FreeConsultationPage
+export default FreeConsultationPage;

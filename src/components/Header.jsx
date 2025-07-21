@@ -1,128 +1,93 @@
-import React, { useState, useEffect } from 'react'
-import './Header.css'
+import React, { useState, useEffect } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { Phone, MapPin, Clock, Menu, X } from 'lucide-react';
 
-const Header = ({ currentPage, navigateTo, mobileMenuOpen, setMobileMenuOpen }) => {
-  const [isScrolled, setIsScrolled] = useState(false)
+const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const handleNavClick = (page, e) => {
-    e.preventDefault()
-    navigateTo(page)
-  }
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handlePhoneClick = () => {
-    window.location.href = 'tel:+1-800-LAWYER-FL'
-  }
+    window.location.href = 'tel:+1-800-LAWYER-FL';
+  };
 
   return (
-    <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-      {/* Top Header Bar */}
-      <div className="header-top">
-        <div className="container">
-          <div className="header-content">
-            <div className="emergency-contact">
-              <span>🚨 Emergency? Call Now!</span>
-              <button onClick={handlePhoneClick} className="phone-number">
-                (800) LAWYER-FL
-              </button>
-            </div>
-            <div className="header-info">
-              <span>📍 Serving All of Florida • ⏰ Available 24/7 • 💼 Free Consultations</span>
-            </div>
+    <header className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+      {/* Top Bar */}
+      <div className="bg-navy text-white py-2 text-xs">
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <span className="flex items-center"><MapPin size={14} className="mr-1" /> Serving All of Florida</span>
+            <span className="flex items-center"><Clock size={14} className="mr-1" /> Available 24/7</span>
+          </div>
+          <div className="flex items-center">
+            <span className="mr-2">🚨 Emergency? Call Now!</span>
+            <a href="tel:+1-800-LAWYER-FL" className="font-bold hover:text-gold transition-colors">
+              (800) LAWYER-FL
+            </a>
           </div>
         </div>
       </div>
-      
-      {/* Main Header */}
-      <div className="header-main">
-        <div className="container">
-          <nav className="nav-content">
-            <button 
-              onClick={(e) => handleNavClick('home', e)} 
-              className="logo"
+
+      {/* Main Navigation */}
+      <nav className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          <Link to="/" className="text-2xl font-bold text-navy">
+            Florida<span className="text-gold">AccidentLawyer</span>
+          </Link>
+
+          {/* Desktop Menu */}
+          <ul className="hidden md:flex items-center space-x-6">
+            <li><NavLink to="/" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')}>Home</NavLink></li>
+            <li><NavLink to="/about" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')}>About</NavLink></li>
+            <li><NavLink to="/practice-areas" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')}>Practice Areas</NavLink></li>
+            <li><NavLink to="/testimonials" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')}>Testimonials</NavLink></li>
+            <li><NavLink to="/blog" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')}>Blog</NavLink></li>
+            <li><NavLink to="/contact" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')}>Contact</NavLink></li>
+          </ul>
+
+          <div className="flex items-center">
+            <Link to="/free-consultation" className="hidden md:inline-block bg-gold text-white px-6 py-2 rounded-md hover:bg-gold-dark transition-all font-semibold">
+              Free Case Review
+            </Link>
+            <button
+              className="md:hidden text-navy"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle mobile menu"
             >
-              Florida<span>AccidentLawyer</span>
+              {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
-            
-            <ul className={`nav-menu ${mobileMenuOpen ? 'active' : ''}`}>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-4 bg-white rounded-lg shadow-xl">
+            <ul className="flex flex-col items-center space-y-4 py-4">
+            <li><NavLink to="/" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')} onClick={() => setMobileMenuOpen(false)}>Home</NavLink></li>
+            <li><NavLink to="/about" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')} onClick={() => setMobileMenuOpen(false)}>About</NavLink></li>
+            <li><NavLink to="/practice-areas" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')} onClick={() => setMobileMenuOpen(false)}>Practice Areas</NavLink></li>
+            <li><NavLink to="/testimonials" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')} onClick={() => setMobileMenuOpen(false)}>Testimonials</NavLink></li>
+            <li><NavLink to="/blog" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')} onClick={() => setMobileMenuOpen(false)}>Blog</NavLink></li>
+            <li><NavLink to="/contact" className={({ isActive }) => (isActive ? 'text-gold font-semibold' : 'text-navy hover:text-gold transition-colors')} onClick={() => setMobileMenuOpen(false)}>Contact</NavLink></li>
               <li>
-                <button 
-                  onClick={(e) => handleNavClick('home', e)}
-                  className={currentPage === 'home' ? 'active' : ''}
-                >
-                  Home
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={(e) => handleNavClick('about', e)}
-                  className={currentPage === 'about' ? 'active' : ''}
-                >
-                  About
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={(e) => handleNavClick('practice-areas', e)}
-                  className={currentPage === 'practice-areas' ? 'active' : ''}
-                >
-                  Practice Areas
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={(e) => handleNavClick('testimonials', e)}
-                  className={currentPage === 'testimonials' ? 'active' : ''}
-                >
-                  Testimonials
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={(e) => handleNavClick('blog', e)}
-                  className={currentPage === 'blog' ? 'active' : ''}
-                >
-                  Blog
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={(e) => handleNavClick('contact', e)}
-                  className={currentPage === 'contact' ? 'active' : ''}
-                >
-                  Contact
-                </button>
+                <Link to="/free-consultation" className="w-full text-center bg-gold text-white px-8 py-3 rounded-md hover:bg-gold-dark transition-all font-semibold" onClick={() => setMobileMenuOpen(false)}>
+                  Free Case Review
+                </Link>
               </li>
             </ul>
-            
-            <div className="header-actions">
-              <button 
-                onClick={(e) => handleNavClick('free-consultation', e)}
-                className="cta-button"
-              >
-                Free Case Review
-              </button>
-              <button 
-                className="mobile-menu-toggle"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Toggle mobile menu"
-              >
-                {mobileMenuOpen ? '✕' : '☰'}
-              </button>
-            </div>
-          </nav>
-        </div>
-      </div>
+          </div>
+        )}
+      </nav>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
