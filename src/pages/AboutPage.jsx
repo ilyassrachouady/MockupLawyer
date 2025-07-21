@@ -113,7 +113,7 @@ const AboutPage = () => {
                 <h3 className="text-xl font-bold text-navy">{member.name}</h3>
                 <p className="text-gold font-semibold mb-2">{member.title}</p>
                 <p className="text-gray-600 text-sm">{member.experience}</p>
-              </motion.iv>
+              </motion.div>
             ))}
           </div>
         </div>
